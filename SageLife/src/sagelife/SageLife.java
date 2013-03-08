@@ -18,7 +18,7 @@ import sagelife.framework.LifeFramework;
  */
 public class SageLife extends JApplet {
 
-    private static final float VERSION = 0.1f;
+    private static final float VERSION = 0.3f;
     private JFrame mainWindow = new JFrame("SageLife v" + VERSION);
     private Container contentPane = mainWindow.getContentPane();
     private LifeFramework framework = new LifeFramework();

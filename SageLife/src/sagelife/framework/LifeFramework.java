@@ -33,7 +33,7 @@ public class LifeFramework {
                         update();
                         grid.repaint();
 
-                        System.out.println("Thread running...");
+                        //System.out.println("Thread running...");
 
                         Thread.sleep(Globals.SLEEP_TIME);
                     } catch (InterruptedException e) {

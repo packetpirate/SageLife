@@ -81,7 +81,7 @@ public class Controls extends javax.swing.JPanel {
             //LifeFramework.stopThread();
             framework.stopThread();
 
-            System.out.println("Thread stopped.");
+            //System.out.println("Thread stopped.");
 
             startButton.setText("Start");
         } else {
@@ -92,7 +92,7 @@ public class Controls extends javax.swing.JPanel {
             //LifeFramework.startThread();
             framework.startThread();
 
-            System.out.println("Thread started!");
+            //System.out.println("Thread started!");
 
             startButton.setText("Stop");
         }

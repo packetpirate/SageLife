@@ -30,18 +30,18 @@ public class Grid extends javax.swing.JPanel {
     }
 
     @Override
-    public void paintComponents(Graphics g) {
-        super.paintComponents(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
         drawGridLines(g2d);
 
-        System.out.println("Grid repainted...");
+        //System.out.println("Grid repainted...");
     }
 
     private void drawGridLines(Graphics2D g2d) {
-        for (int x = Globals.cellWidth; x < (Globals.gridSize.width - Globals.cellWidth); x += Globals.cellWidth) {
-            for (int y = Globals.cellHeight; y < (Globals.gridSize.height - Globals.cellHeight); y += Globals.cellHeight) {
+        for (int x = Globals.cellWidth; x < Globals.gridSize.width; x += Globals.cellWidth) {
+            for (int y = Globals.cellHeight; y < Globals.gridSize.height; y += Globals.cellHeight) {
                 g2d.drawLine(x, 0, x, Globals.gridSize.height);
                 g2d.drawLine(0, y, Globals.gridSize.width, y);
             }
