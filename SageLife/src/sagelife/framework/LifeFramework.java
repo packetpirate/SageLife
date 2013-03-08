@@ -1,5 +1,7 @@
 package sagelife.framework;
 
+import sagelife.canvas.Controls;
+import sagelife.canvas.Grid;
 import sagelife.misc.Globals;
 
 /**
@@ -8,15 +10,30 @@ import sagelife.misc.Globals;
  * @author Darin Beaudreau
  */
 public class LifeFramework {
+    // Member variables.
 
-    public static void initializeThread() {
+    public Grid grid;
+    public Controls controls;
+
+    public LifeFramework() {
+        grid = new Grid(this);
+        controls = new Controls(this);
+    }
+
+    public void update() {
+        //System.out.println("Update called...");
+    }
+
+    public void initializeThread() {
         Globals.mainThread = new Runnable() {
             @Override
             public void run() {
                 while (Globals.simulationRunning) {
                     try {
-                        // Update call goes here.
-                        // TODO: Figure out how to call repaint on Grid from here.
+                        update();
+                        grid.repaint();
+
+                        System.out.println("Thread running...");
 
                         Thread.sleep(Globals.SLEEP_TIME);
                     } catch (InterruptedException e) {
@@ -26,11 +43,11 @@ public class LifeFramework {
         };
     }
 
-    public static void startThread() {
+    public void startThread() {
         new Thread(Globals.mainThread).start();
     }
-    
-    public static void stopThread() {
+
+    public void stopThread() {
         Globals.mainThread = null;
     }
 }

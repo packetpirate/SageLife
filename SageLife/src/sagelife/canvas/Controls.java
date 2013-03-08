@@ -8,11 +8,16 @@ import sagelife.misc.Globals;
  * @author Darin Beaudreau
  */
 public class Controls extends javax.swing.JPanel {
-    
+
+    // Member variables.
+    private LifeFramework framework;
+
     /**
      * Creates new form Controls
      */
-    public Controls() {
+    public Controls(LifeFramework framework) {
+        this.framework = framework;
+
         initComponents();
     }
 
@@ -70,22 +75,28 @@ public class Controls extends javax.swing.JPanel {
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         // Toggles the start button's text.
-        if(Globals.simulationRunning) {
+        if (Globals.simulationRunning) {
             // Set the running boolean to false and stop the thread.
             Globals.simulationRunning = false;
-            LifeFramework.stopThread();
-            
+            //LifeFramework.stopThread();
+            framework.stopThread();
+
+            System.out.println("Thread stopped.");
+
             startButton.setText("Start");
         } else {
             // Set the running boolean to true and initialize the thread.
             Globals.simulationRunning = true;
-            LifeFramework.initializeThread();
-            LifeFramework.startThread();
-            
+            //LifeFramework.initializeThread();
+            framework.initializeThread();
+            //LifeFramework.startThread();
+            framework.startThread();
+
+            System.out.println("Thread started!");
+
             startButton.setText("Stop");
         }
     }//GEN-LAST:event_startButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearButton;
     private javax.swing.JButton premadeButton;

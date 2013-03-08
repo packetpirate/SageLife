@@ -7,8 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import sagelife.canvas.Controls;
-import sagelife.canvas.Grid;
+import sagelife.framework.LifeFramework;
 
 /**
  * This is a modified version of my original "Conway's Game of Life" clone. This
@@ -22,8 +21,9 @@ public class SageLife extends JApplet {
     private static final float VERSION = 0.1f;
     private JFrame mainWindow = new JFrame("SageLife v" + VERSION);
     private Container contentPane = mainWindow.getContentPane();
-    private Grid grid = new Grid();
-    private Controls controls = new Controls();
+    private LifeFramework framework = new LifeFramework();
+    //private Grid grid = new Grid();
+    //private Controls controls = new Controls();
 
     public static void main(String[] args) {
         SageLife sagelife = new SageLife();
@@ -46,21 +46,21 @@ public class SageLife extends JApplet {
         SpringLayout layout = new SpringLayout();
 
         // Set the constraints of the grid component.
-        layout.putConstraint(SpringLayout.WEST, grid, 0, SpringLayout.WEST, mainWindow);
-        layout.putConstraint(SpringLayout.NORTH, grid, 0, SpringLayout.NORTH, mainWindow);
+        layout.putConstraint(SpringLayout.WEST, framework.grid, 0, SpringLayout.WEST, mainWindow);
+        layout.putConstraint(SpringLayout.NORTH, framework.grid, 0, SpringLayout.NORTH, mainWindow);
 
         // Set the constraints of the control component.
-        layout.putConstraint(SpringLayout.WEST, controls, 0, SpringLayout.WEST, mainWindow);
-        layout.putConstraint(SpringLayout.NORTH, controls, 0, SpringLayout.SOUTH, grid);
+        layout.putConstraint(SpringLayout.WEST, framework.controls, 0, SpringLayout.WEST, mainWindow);
+        layout.putConstraint(SpringLayout.NORTH, framework.controls, 0, SpringLayout.SOUTH, framework.grid);
 
         // Set the constraints of the main window.
-        layout.putConstraint(SpringLayout.EAST, contentPane, 0, SpringLayout.EAST, grid);
-        layout.putConstraint(SpringLayout.SOUTH, contentPane, 0, SpringLayout.SOUTH, controls);
+        layout.putConstraint(SpringLayout.EAST, contentPane, 0, SpringLayout.EAST, framework.grid);
+        layout.putConstraint(SpringLayout.SOUTH, contentPane, 0, SpringLayout.SOUTH, framework.controls);
 
         contentPane.setLayout(layout);
 
-        contentPane.add(grid);
-        contentPane.add(controls);
+        contentPane.add(framework.grid);
+        contentPane.add(framework.controls);
 
         contentPane.setBackground(Color.WHITE);
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

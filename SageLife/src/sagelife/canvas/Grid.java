@@ -1,16 +1,51 @@
 package sagelife.canvas;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import sagelife.framework.LifeFramework;
+import sagelife.misc.Globals;
+
 /**
  * Contains the grid to which the cells are drawn.
+ *
  * @author Darin Beaudreau
  */
 public class Grid extends javax.swing.JPanel {
 
+    // Member variables.
+    private LifeFramework framework;
+
     /**
      * Creates new form Grid
      */
-    public Grid() {
+    public Grid(LifeFramework framework) {
+        this.framework = framework;
+
+        this.setPreferredSize(new Dimension(400, 300));
+        Globals.gridSize = this.getPreferredSize();
+        //System.out.println("Dimensions: " + Globals.gridSize.width + "x" + Globals.gridSize.height);
+
         initComponents();
+    }
+
+    @Override
+    public void paintComponents(Graphics g) {
+        super.paintComponents(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        drawGridLines(g2d);
+
+        System.out.println("Grid repainted...");
+    }
+
+    private void drawGridLines(Graphics2D g2d) {
+        for (int x = Globals.cellWidth; x < (Globals.gridSize.width - Globals.cellWidth); x += Globals.cellWidth) {
+            for (int y = Globals.cellHeight; y < (Globals.gridSize.height - Globals.cellHeight); y += Globals.cellHeight) {
+                g2d.drawLine(x, 0, x, Globals.gridSize.height);
+                g2d.drawLine(0, y, Globals.gridSize.width, y);
+            }
+        }
     }
 
     /**
