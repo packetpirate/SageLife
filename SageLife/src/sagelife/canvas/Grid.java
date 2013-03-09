@@ -1,8 +1,10 @@
 package sagelife.canvas;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import sagelife.framework.LifeFramework;
 import sagelife.misc.Globals;
 
@@ -33,6 +35,25 @@ public class Grid extends javax.swing.JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        
+        // Draw the cells. For now, yellow is used as the cell color. Inactive cells are not drawn to save time.
+        int cellRowLength = framework.cells.length;
+        int cellColLength = framework.cells[0].length;
+        for(int r = 0; r < cellRowLength; r++) {
+            for(int c = 0; c < cellColLength; c++) {
+                if(framework.cells[r][c].isAlive()) {
+                    // Create a rectangle to contain the cell's location in the grid.
+                    double x = c * Globals.cellWidth;
+                    double y = r * Globals.cellHeight;
+                    double x2 = x + Globals.cellWidth;
+                    double y2 = y + Globals.cellHeight;
+                    Rectangle2D rect = new Rectangle2D.Double(x, y, x2, y2);
+
+                    g2d.setColor(Color.YELLOW);
+                    g2d.fill(rect);
+                }
+            }
+        }
 
         drawGridLines(g2d);
 

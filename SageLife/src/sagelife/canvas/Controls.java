@@ -39,6 +39,11 @@ public class Controls extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(400, 50));
 
         clearButton.setText("Clear");
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
 
         settingsButton.setText("Settings");
 
@@ -97,6 +102,11 @@ public class Controls extends javax.swing.JPanel {
             startButton.setText("Stop");
         }
     }//GEN-LAST:event_startButtonActionPerformed
+
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        framework.killAllCells();
+    }//GEN-LAST:event_clearButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearButton;
     private javax.swing.JButton premadeButton;
