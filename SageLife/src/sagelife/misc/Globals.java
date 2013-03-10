@@ -9,13 +9,15 @@ import java.awt.Dimension;
  */
 public class Globals {
     // Constant variables.
-    public static final int SLEEP_TIME = 1000; // Thread sleep time in ms.
+    public static final int SLEEP_TIME = 250; // Thread sleep time in ms.
     // Non-constant globals.
     public static volatile boolean simulationRunning = false;
     public static Runnable mainThread;
     public static Dimension gridSize;
     public static int cellWidth = 10;
     public static int cellHeight = 10;
+    public static int rowLength = 0;
+    public static int colLength = 0;
     
     // Default values to determine game logic.
     public static int cellsLonelyMin = 0; // The lower bound number determining when cells die of loneliness.

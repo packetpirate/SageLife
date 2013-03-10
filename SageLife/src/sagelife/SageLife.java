@@ -18,7 +18,7 @@ import sagelife.framework.LifeFramework;
  */
 public class SageLife extends JApplet {
 
-    private static final float VERSION = 0.6f;
+    private static final float VERSION = 0.8f;
     private JFrame mainWindow = new JFrame("SageLife v" + VERSION);
     private Container contentPane = mainWindow.getContentPane();
     private LifeFramework framework = new LifeFramework();
@@ -46,23 +46,23 @@ public class SageLife extends JApplet {
         SpringLayout layout = new SpringLayout();
 
         // Set the constraints of the grid component.
-        layout.putConstraint(SpringLayout.WEST, framework.grid, 0, SpringLayout.WEST, mainWindow);
-        layout.putConstraint(SpringLayout.NORTH, framework.grid, 0, SpringLayout.NORTH, mainWindow);
+        layout.putConstraint(SpringLayout.WEST, framework.grid, 10, SpringLayout.WEST, mainWindow);
+        layout.putConstraint(SpringLayout.NORTH, framework.grid, 10, SpringLayout.NORTH, mainWindow);
 
         // Set the constraints of the control component.
-        layout.putConstraint(SpringLayout.WEST, framework.controls, 0, SpringLayout.WEST, mainWindow);
-        layout.putConstraint(SpringLayout.NORTH, framework.controls, 0, SpringLayout.SOUTH, framework.grid);
+        layout.putConstraint(SpringLayout.WEST, framework.controls, 10, SpringLayout.WEST, mainWindow);
+        layout.putConstraint(SpringLayout.NORTH, framework.controls, 10, SpringLayout.SOUTH, framework.grid);
 
         // Set the constraints of the main window.
-        layout.putConstraint(SpringLayout.EAST, contentPane, 0, SpringLayout.EAST, framework.grid);
-        layout.putConstraint(SpringLayout.SOUTH, contentPane, 0, SpringLayout.SOUTH, framework.controls);
+        layout.putConstraint(SpringLayout.EAST, contentPane, 10, SpringLayout.EAST, framework.grid);
+        layout.putConstraint(SpringLayout.SOUTH, contentPane, 10, SpringLayout.SOUTH, framework.controls);
 
         contentPane.setLayout(layout);
 
         contentPane.add(framework.grid);
         contentPane.add(framework.controls);
 
-        contentPane.setBackground(Color.WHITE);
+        contentPane.setBackground(Color.GRAY);
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setLocationRelativeTo(null);
         mainWindow.pack();

@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import javax.swing.event.MouseInputAdapter;
 import sagelife.framework.LifeFramework;
+import sagelife.framework.structures.Cell;
 import sagelife.misc.Globals;
 
 /**
@@ -17,6 +20,8 @@ public class Grid extends javax.swing.JPanel {
 
     // Member variables.
     private LifeFramework framework;
+    
+    public Point mousePos;
 
     /**
      * Creates new form Grid
@@ -24,9 +29,40 @@ public class Grid extends javax.swing.JPanel {
     public Grid(LifeFramework framework) {
         this.framework = framework;
 
+        // Set the preferred size of the control form.
         this.setPreferredSize(new Dimension(400, 300));
         Globals.gridSize = this.getPreferredSize();
-        //System.out.println("Dimensions: " + Globals.gridSize.width + "x" + Globals.gridSize.height);
+        
+        mousePos = new Point(0, 0);
+        
+        this.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent m) {
+                if(!Globals.simulationRunning) {
+                    mousePos.x = m.getX();
+                    mousePos.y = m.getY();
+                    
+                    for(int r = 0; r < Globals.rowLength; r++) {
+                        for(int c = 0; c < Globals.colLength; c++) {
+                            callToggleCell(r,c);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void mouseDragged(MouseEvent m) {
+                if(!Globals.simulationRunning) {
+                    mousePos.x = m.getX();
+                    mousePos.y = m.getY();
+                    
+                    for(int r = 0; r < Globals.rowLength; r++) {
+                        for(int c = 0; c < Globals.colLength; c++) {
+                            callToggleCell(r,c);
+                        }
+                    }
+                }
+            }
+        });
 
         initComponents();
     }
@@ -37,21 +73,14 @@ public class Grid extends javax.swing.JPanel {
         Graphics2D g2d = (Graphics2D) g;
         
         // Draw the cells. For now, yellow is used as the cell color. Inactive cells are not drawn to save time.
-        int cellRowLength = framework.cells.length;
-        int cellColLength = framework.cells[0].length;
+        int cellRowLength = Globals.rowLength;
+        int cellColLength = Globals.colLength;
+        g2d.setColor(Color.YELLOW);
+        
         for(int r = 0; r < cellRowLength; r++) {
             for(int c = 0; c < cellColLength; c++) {
-                if(framework.cells[r][c].isAlive()) {
-                    // Create a rectangle to contain the cell's location in the grid.
-                    double x = c * Globals.cellWidth;
-                    double y = r * Globals.cellHeight;
-                    double x2 = x + Globals.cellWidth;
-                    double y2 = y + Globals.cellHeight;
-                    Rectangle2D rect = new Rectangle2D.Double(x, y, x2, y2);
-
-                    g2d.setColor(Color.YELLOW);
-                    g2d.fill(rect);
-                }
+                Cell cell = framework.cells[r][c];
+                if(cell.isAlive()) g2d.fill(cell);
             }
         }
 
@@ -61,11 +90,24 @@ public class Grid extends javax.swing.JPanel {
     }
 
     private void drawGridLines(Graphics2D g2d) {
+        g2d.setColor(Color.BLACK);
+        
         for (int x = Globals.cellWidth; x < Globals.gridSize.width; x += Globals.cellWidth) {
             for (int y = Globals.cellHeight; y < Globals.gridSize.height; y += Globals.cellHeight) {
                 g2d.drawLine(x, 0, x, Globals.gridSize.height);
                 g2d.drawLine(0, y, Globals.gridSize.width, y);
             }
+        }
+        g2d.drawLine(0, 0, Globals.gridSize.width, 0);
+        g2d.drawLine((Globals.gridSize.width - 1), 0, (Globals.gridSize.width - 1), Globals.gridSize.height);
+        g2d.drawLine(Globals.gridSize.width, (Globals.gridSize.height - 1), 0, (Globals.gridSize.height - 1));
+        g2d.drawLine(0, Globals.gridSize.height, 0, 0);
+    }
+    
+    private void callToggleCell(int row, int col) {
+        Cell c = framework.cells[row][col];
+        if(c.contains(mousePos)) {
+            framework.toggleCell(row, col);
         }
     }
 

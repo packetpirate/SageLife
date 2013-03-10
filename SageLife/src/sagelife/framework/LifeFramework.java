@@ -1,5 +1,6 @@
 package sagelife.framework;
 
+import java.awt.geom.Rectangle2D;
 import sagelife.canvas.Controls;
 import sagelife.canvas.Grid;
 import sagelife.framework.structures.Cell;
@@ -17,6 +18,8 @@ public class LifeFramework {
     public Controls controls;
     
     public Cell[][] cells;
+    
+    public int generations = 0;
 
     public LifeFramework() {
         grid = new Grid(this);
@@ -28,41 +31,51 @@ public class LifeFramework {
         cells = new Cell[cellRows][cellCols];
         for(int r = 0; r < cellRows; r++) {
             for(int c = 0; c < cellCols; c++) {
-                cells[r][c] = new Cell();
+                double x = c * Globals.cellWidth;
+                double y = r * Globals.cellHeight;
+                double w = Globals.cellWidth;
+                double h = Globals.cellHeight;
+                Rectangle2D rect = new Rectangle2D.Double(x, y, w, h);
+                cells[r][c] = new Cell(rect);
             }
         }
+        
+        Globals.rowLength = cells.length;
+        Globals.colLength = cells[0].length;
     }
 
     public void update() {
-        //System.out.println("Update called...");
-        int cellRowLength = cells.length;
-        int cellColLength = cells[0].length;
+        // Update the number of neighbors for each cell.
+        for(int r = 0; r < Globals.rowLength; r++) {
+            for(int c = 0; c < Globals.colLength; c++) {
+                cells[r][c].neighbors = getCellNeighbors(r,c);
+            }
+        }
         
-        /**
-         * First pass is to kill off any crowded or lonely cells. Second pass checks if any
-         * cells need to be born. It needs to be done this way because if you check for both
-         * at the same time, when you check if cells need to be born, it will get incorrect
-         * data because it is checking what is currently being modified by the first pass.
-         * This can lead to false output.
-         **/
-        // First pass, kill any cells that are lonely or overcrowded.
-        for(int r = 0; r < cellRowLength; r++) {
-            for(int c = 0; c < cellColLength; c++) {
-                cells[r][c].update(getCellNeighbors(r,c), true);
+        // Update the cell state by applying game logic.
+        for(int r = 0; r < Globals.rowLength; r++) {
+            for(int c = 0; c < Globals.colLength; c++) {
+                cells[r][c].update();
             }
         }
-        // Second pass, check if any new cells should be born.
-        for(int r = 0; r < cellRowLength; r++) {
-            for(int c = 0; c < cellColLength; c++) {
-                cells[r][c].update(getCellNeighbors(r,c), false);
-            }
-        }
+        
+        generations++;
+        controls.getGenerations().setText("Generations: " + generations);
+    }
+    
+    public void toggleCell(int row, int col) {
+        Cell c = cells[row][col];
+        
+        if(c.isAlive()) c.kill();
+        else c.revive();
+        
+        grid.repaint();
     }
     
     private int getCellNeighbors(int row, int col) {
         int n = 0; // The number of neighbors.
-        int rowLength = cells.length;
-        int colLength = cells[0].length;
+        int rowLength = Globals.rowLength;
+        int colLength = Globals.colLength;
         
         // Check each of the eight positions around the cell, if they exist. If they are alive, increment n.
         // Each position checked is relative to the current cell, so (-1,-1) means the cell
@@ -73,19 +86,19 @@ public class LifeFramework {
         if(!((row - 1) < 0)) { // Check position (-1,0)(Top-Center)
             if(cells[row - 1][col].isAlive()) n++;
         }
-        if((!((row - 1) < 0))&&(!((col + 1) > colLength))) { // Check position (-1,+1)(Top-Right)
+        if((!((row - 1) < 0))&&(!((col + 1) > (colLength - 1)))) { // Check position (-1,+1)(Top-Right)
             if(cells[row - 1][col + 1].isAlive()) n++;
         }
-        if(!((col + 1) > colLength)) { // Check position (0,+1)(Center-Right)
+        if(!((col + 1) > (colLength - 1))) { // Check position (0,+1)(Center-Right)
             if(cells[row][col + 1].isAlive()) n++;
         }
-        if((!((row + 1) > rowLength))&&(!((col + 1) > colLength))) { // Check position (+1,+1)(Bottom-Right)
+        if((!((row + 1) > (rowLength - 1)))&&(!((col + 1) > (colLength - 1)))) { // Check position (+1,+1)(Bottom-Right)
             if(cells[row + 1][col + 1].isAlive()) n++;
         }
-        if(!((row + 1) > rowLength)) { // Check position (+1,0)(Bottom-Center)
+        if(!((row + 1) > (rowLength - 1))) { // Check position (+1,0)(Bottom-Center)
             if(cells[row + 1][col].isAlive()) n++;
         }
-        if((!((row + 1) > rowLength))&&(!((col - 1) < 0))) { // Check position (+1,-1)(Bottom-Left)
+        if((!((row + 1) > (rowLength - 1)))&&(!((col - 1) < 0))) { // Check position (+1,-1)(Bottom-Left)
             if(cells[row + 1][col - 1].isAlive()) n++;
         }
         if(!((col - 1) < 0)) { // Check position (0,-1)(Center-Left)
@@ -99,14 +112,19 @@ public class LifeFramework {
      * Called by the Clear button of the Controls form to reset the cell grid.
      **/
     public void killAllCells() {
-        int cellRowLength = cells.length;
-        int cellColLength = cells[0].length;
+        int cellRowLength = Globals.rowLength;
+        int cellColLength = Globals.colLength;
         
         for(int r = 0; r < cellRowLength; r++) {
             for(int c = 0; c < cellColLength; c++) {
                 cells[r][c].kill();
             }
         }
+        
+        generations = 0;
+        controls.getGenerations().setText("Generations: " + generations);
+        
+        grid.repaint();
     }
 
     public void initializeThread() {
